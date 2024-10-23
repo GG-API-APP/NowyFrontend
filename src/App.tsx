@@ -39,7 +39,7 @@ function App() {
 
   const styles = {
     avatar:
-      "rounded-full shadow-lg overflow-hidden bg-red-500 min-w-[60px] min-h-[60px] max-w-[60px] max-h-[60px]",
+      "rounded-full shadow-lg overflow-hidden bg-gray-500 min-w-[60px] min-h-[60px] max-w-[60px] max-h-[60px]",
     messageBox: "bg-gray-300 p-[4px] rounded-lg shadow-lg",
     conversationPairCard:
       "flex justify-between bg-yellow-500 rounded shadow-lg m-[12px] p-[12px] hover:bg-blue-200 hover:cursor-pointer",
