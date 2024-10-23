@@ -48,7 +48,7 @@ export const UserCard = ({
         <div className="font-bold">{personName}</div>
         <div>{person}</div>
       </div>
-      <i className="text-xs truncate">{personDescription}</i>
+      <i className="text-xs truncate max-w-full">{personDescription}</i>
     </div>
   );
 };
