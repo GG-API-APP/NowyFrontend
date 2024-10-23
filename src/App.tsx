@@ -8,7 +8,6 @@ import clsx from "clsx";
 import { format } from "date-fns";
 
 function App() {
-  const [currentTalkers, setCurrentTalkers] = useState({});
   const [conversationPair, setConversationPair] = useState<ConversationPair[]>(
     []
   );
@@ -75,28 +74,46 @@ function App() {
       <div className="bg-gray-200 w-full overflow-auto px-[8px]">
         {conversationLoading
           ? "Loading..."
-          : conversation.messages.map((conv) => (
-              <div
-                key={conv._id}
-                className={styles.conversationMessage(conv.authorPerson)}
-              >
-                <div className={styles.avatar}>
-                  <img
-                    src={`https://avatars.gg.pl/user,${conv.authorPerson}/s,60x60`}
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null; // prevents looping
-                      currentTarget.src = "../assets/user.png";
-                    }}
-                  />
-                </div>
-                <div className={styles.messageBox}>
-                  <div className="font-bold">
-                    {format(conv.createdAt, "dd-MM-yyyy kk:mm:ss")}
+          : conversation.messages.map((conv) => {
+              const imageUrlPattern =
+                /\.(jpeg|jpg|png|gif|bmp|webp|tiff|svg)$/i;
+              const isPhoto = imageUrlPattern.test(conv.message);
+
+              return (
+                <div
+                  key={conv._id}
+                  className={styles.conversationMessage(conv.authorPerson)}
+                >
+                  <div className={styles.avatar}>
+                    <img
+                      src={`https://avatars.gg.pl/user,${conv.authorPerson}/s,60x60`}
+                      onError={({ currentTarget }) => {
+                        currentTarget.onerror = null; // prevents looping
+                        currentTarget.src = "../assets/user.png";
+                      }}
+                    />
                   </div>
-                  <div className="w-fit p-[4px]">{conv.message}</div>
+                  <div className={styles.messageBox}>
+                    <div className="font-bold">
+                      {format(conv.createdAt, "dd-MM-yyyy kk:mm:ss")}
+                    </div>
+                    {isPhoto ? (
+                      <img
+                        className="max-h-[250px] max-w-[250px]"
+                        src={conv.message}
+                      />
+                    ) : (
+                      <div
+                        className="w-fit p-[4px]"
+                        title={conv.originalMessage}
+                      >
+                        {conv.message}
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
       </div>
     </div>
   );
