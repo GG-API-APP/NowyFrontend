@@ -48,7 +48,7 @@ function App() {
       "rounded-full shadow-lg overflow-hidden bg-gray-500 min-w-[60px] min-h-[60px] max-w-[60px] max-h-[60px]",
     messageBox: "bg-gray-300 p-[4px] rounded-lg shadow-lg",
     conversationPairCard:
-      "flex justify-between bg-yellow-500 rounded shadow-lg m-[12px] p-[12px] hover:bg-blue-200 hover:cursor-pointer",
+      "flex flex-col items-start justify-between bg-yellow-500 rounded shadow-lg m-[12px] p-[12px] hover:bg-blue-200 hover:cursor-pointer gap-y-[4px]",
     conversationMessage: (authorPerson: string) =>
       clsx("flex items-center py-[8px] gap-x-[8px]", {
         "place-content-end": authorPerson !== conversation.personOne,
@@ -67,16 +67,25 @@ function App() {
               onClick={() => fetchConversation(pair.personOne)}
               className={styles.conversationPairCard}
             >
-              <UserCard
-                personOne={pair.personOne}
-                personOneName={pair.personOneName}
-              />
-              <div className="flex items-center">{`Wymienili ${pair.messageCount} wiadomości`}</div>
-              <UserCard
-                personOne={pair.personTwo}
-                personOneName={pair.personTwoName}
-                mirrored
-              />
+              <div className="flex">
+                <UserCard
+                  person={pair.personOne}
+                  personName={pair.personOneName}
+                  personDescription={pair.personOneDescription}
+                />
+                <div className="flex items-center text-xl font-bold">
+                  ({pair.messageCount})
+                </div>
+                <UserCard
+                  person={pair.personTwo}
+                  personName={pair.personTwoName}
+                  personDescription={pair.personTwoDescription}
+                  mirrored
+                />
+              </div>
+              <i className="truncate w-full text-s">
+                {`Ostatnio: ${pair.lastMessge}`}
+              </i>
             </div>
           ))
         )}
@@ -104,9 +113,10 @@ function App() {
                   />
                 </div>
                 <div className={styles.messageBox}>
-                  <div className="font-bold">
+                  <div className="font-bold text-xs">
                     {format(conv.createdAt, "dd-MM-yyyy kk:mm:ss")}
                   </div>
+                  <i className="text-xs">{conv.authorPerson}</i>
                   {isPhoto ? (
                     <img
                       className="max-h-[250px] max-w-[250px]"

@@ -11,7 +11,7 @@ export type ConversationPair = {
   __v: number;
   personTwo: string;
   personTwoName?: string;
-  personTw0Description?: string;
+  personTwoDescription?: string;
 };
 
 export type Conversation = {
