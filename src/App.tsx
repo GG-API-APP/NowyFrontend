@@ -89,7 +89,7 @@ function App() {
                       src={`https://avatars.gg.pl/user,${conv.authorPerson}/s,60x60`}
                       onError={({ currentTarget }) => {
                         currentTarget.onerror = null; // prevents looping
-                        currentTarget.src = "./assets/user.png";
+                        currentTarget.src = "/assets/user.png";
                       }}
                     />
                   </div>
