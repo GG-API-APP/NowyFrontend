@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import userIcon from "../assets/user.png";
 
 type UserCardProps = {
   personOne: string;
@@ -16,7 +17,7 @@ export const UserCard = ({
       "flex-row-reverse": mirrored,
     }),
     avatar:
-      "rounded-full shadow-lg overflow-hidden bg-red-500 min-w-[60px] min-h-[60px] max-w-[60px] max-h-[60px]",
+      "rounded-full shadow-lg overflow-hidden bg-gray-400 min-w-[60px] min-h-[60px] max-w-[60px] max-h-[60px]",
   };
 
   return (
@@ -25,8 +26,8 @@ export const UserCard = ({
         <img
           src={`https://avatars.gg.pl/user,${personOne}/s,60x60`}
           onError={({ currentTarget }) => {
-            currentTarget.onerror = null; // prevents looping
-            currentTarget.src = "../assets/user.png";
+            currentTarget.onerror = null;
+            currentTarget.src = userIcon;
           }}
         />
       </div>
