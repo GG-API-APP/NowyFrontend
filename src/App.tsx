@@ -35,12 +35,13 @@ function App() {
     fetchConversationPairs();
   }, []);
 
-  const fetchConversation = async (personOneNumber: string) => {
+  const fetchConversation = async (pair: ConversationPair) => {
+    const personToFetch = [pair.personOne, pair.personTwo].sort()[0];
     setConversationLoading(true);
     const data = await axios.get(
-      `${protocol}://${serverUrl}/conversations/${personOneNumber}`
+      `${protocol}://${serverUrl}/conversations/${personToFetch}`
     );
-    setConversation({ personOne: personOneNumber, messages: data.data });
+    setConversation({ personOne: personToFetch, messages: data.data });
     setConversationLoading(false);
   };
 
@@ -72,7 +73,7 @@ function App() {
             conversationPair.map((pair) => (
               <div
                 key={pair._id}
-                onClick={() => fetchConversation(pair.personOne)}
+                onClick={() => fetchConversation(pair)}
                 className={styles.conversationPairCard}
               >
                 <div className="flex">
