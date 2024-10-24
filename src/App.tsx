@@ -105,12 +105,14 @@ function App() {
             <Spinner />
           ) : (
             conversation.messages.map((conv) => {
+              const messageToCheck = displayOriginalMessages
+                ? conv.originalMessage
+                : conv.message;
               const imageUrlPattern =
                 /\.(jpeg|jpg|png|gif|bmp|webp|tiff|svg)$/i;
-              const isPhoto = imageUrlPattern.test(conv.originalMessage);
+              const isPhoto = imageUrlPattern.test(messageToCheck);
               const isGGPhoto =
-                isPhoto &&
-                conv.originalMessage.includes("https://www.gg.pl/dysk/");
+                isPhoto && messageToCheck.includes("https://www.gg.pl/dysk/");
 
               return (
                 <div
@@ -135,28 +137,17 @@ function App() {
                       <img
                         className="max-h-[250px] max-w-[250px]"
                         src={
-                          displayOriginalMessages
-                            ? isGGPhoto
-                              ? conv.originalMessage.replace(
-                                  "www.gg.pl/dysk/",
-                                  "p.gg.pl/thumb/p/d/"
-                                )
-                              : conv.originalMessage
-                            : conv.message
+                          isGGPhoto
+                            ? messageToCheck.replace(
+                                "www.gg.pl/dysk/",
+                                "p.gg.pl/thumb/p/d/"
+                              )
+                            : messageToCheck
                         }
                       />
                     ) : (
-                      <div
-                        className="w-fit p-[4px]"
-                        title={
-                          displayOriginalMessages
-                            ? conv.message
-                            : conv.originalMessage
-                        }
-                      >
-                        {displayOriginalMessages
-                          ? conv.originalMessage
-                          : conv.message}
+                      <div className="w-fit p-[4px]" title={messageToCheck}>
+                        {messageToCheck}
                       </div>
                     )}
                   </div>
