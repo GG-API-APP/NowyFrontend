@@ -20,6 +20,7 @@ function App() {
     personOne: string;
     messages: Conversation[];
   }>({ personOne: "", messages: [] });
+  const [displayOriginalMessages, setDisplayOriginalMessages] = useState(false);
 
   const protocol = import.meta.env.VITE_PROTOCOL;
   const serverUrl = import.meta.env.VITE_SERVER_URL;
@@ -45,7 +46,7 @@ function App() {
 
   const styles = {
     avatar:
-      "rounded-full shadow-lg overflow-hidden bg-gray-500 min-w-[60px] min-h-[60px] max-w-[60px] max-h-[60px]",
+      "rounded-full shadow-lg overflow-hidden bg-gray-500 min-w-[80px] min-h-[80px] max-w-[80px] max-h-[80px]",
     messageBox: "bg-gray-300 p-[4px] rounded-lg shadow-lg",
     conversationPairCard:
       "flex flex-col items-start justify-between bg-yellow-500 rounded shadow-lg m-[12px] p-[12px] hover:bg-blue-200 hover:cursor-pointer gap-y-[4px]",
@@ -56,82 +57,112 @@ function App() {
   };
 
   return (
-    <div className="flex h-[100vh]">
-      <div className="bg-yellow-700 min-w-[700px] overflow-auto">
-        {conversationLiastLoading ? (
-          <Spinner />
-        ) : (
-          conversationPair.map((pair) => (
-            <div
-              key={pair._id}
-              onClick={() => fetchConversation(pair.personOne)}
-              className={styles.conversationPairCard}
-            >
-              <div className="flex">
-                <UserCard
-                  person={pair.personOne}
-                  personName={pair.personOneName}
-                  personDescription={pair.personOneDescription}
-                />
-                <div className="flex items-center text-xl font-bold">
-                  ({pair.messageCount})
-                </div>
-                <UserCard
-                  person={pair.personTwo}
-                  personName={pair.personTwoName}
-                  personDescription={pair.personTwoDescription}
-                  mirrored
-                />
-              </div>
-              <i className="truncate w-full text-s">
-                {`Ostatnio: ${pair.lastMessge}`}
-              </i>
-            </div>
-          ))
-        )}
+    <div className="flex flex-col h-[100vh]">
+      <div className="flex bg-yellow-300 p-[8px]">
+        <button
+          onClick={() => setDisplayOriginalMessages((prev) => !prev)}
+        >{`Set to ${displayOriginalMessages ? "validated" : "original"} messages`}</button>
       </div>
-      <div className="bg-gray-200 w-full overflow-auto px-[8px]">
-        {conversationLoading ? (
-          <Spinner />
-        ) : (
-          conversation.messages.map((conv) => {
-            const imageUrlPattern = /\.(jpeg|jpg|png|gif|bmp|webp|tiff|svg)$/i;
-            const isPhoto = imageUrlPattern.test(conv.message);
-
-            return (
+      <div className="flex w-full overflow-auto">
+        {" "}
+        <div className="bg-yellow-700 min-w-[700px] overflow-auto">
+          {conversationLiastLoading ? (
+            <Spinner />
+          ) : (
+            conversationPair.map((pair) => (
               <div
-                key={conv._id}
-                className={styles.conversationMessage(conv.authorPerson)}
+                key={pair._id}
+                onClick={() => fetchConversation(pair.personTwo)}
+                className={styles.conversationPairCard}
               >
-                <div className={styles.avatar}>
-                  <img
-                    src={`https://avatars.gg.pl/user,${conv.authorPerson}/s,60x60`}
-                    onError={({ currentTarget }) => {
-                      currentTarget.onerror = null; // prevents looping
-                      currentTarget.src = userIcon;
-                    }}
+                <div className="flex">
+                  <UserCard
+                    person={pair.personOne}
+                    personName={pair.personOneName}
+                    personDescription={pair.personOneDescription}
+                  />
+                  <div className="flex items-center text-xl font-bold">
+                    ({pair.messageCount})
+                  </div>
+                  <UserCard
+                    person={pair.personTwo}
+                    personName={pair.personTwoName}
+                    personDescription={pair.personTwoDescription}
+                    mirrored
                   />
                 </div>
-                <div className={styles.messageBox}>
-                  <div className="font-bold text-xs">
-                    {format(conv.createdAt, "dd-MM-yyyy kk:mm:ss")}
-                  </div>
-                  <i className="text-xs">{conv.authorPerson}</i>
-                  {isPhoto ? (
-                    <img
-                      className="max-h-[250px] max-w-[250px]"
-                      src={conv.message}
-                    />
-                  ) : (
-                    <div className="w-fit p-[4px]" title={conv.originalMessage}>
-                      {conv.message}
-                    </div>
-                  )}
-                </div>
+                <i className="truncate w-full text-s">
+                  {`Ostatnio: ${pair.lastMessge}`}
+                </i>
               </div>
-            );
-          })
-        )}
+            ))
+          )}
+        </div>
+        <div className="bg-gray-200 w-full overflow-auto px-[8px]">
+          {conversationLoading ? (
+            <Spinner />
+          ) : (
+            conversation.messages.map((conv) => {
+              const imageUrlPattern =
+                /\.(jpeg|jpg|png|gif|bmp|webp|tiff|svg)$/i;
+              const isPhoto = imageUrlPattern.test(conv.originalMessage);
+              const isGGPhoto =
+                isPhoto &&
+                conv.originalMessage.includes("https://www.gg.pl/dysk/");
+
+              return (
+                <div
+                  key={conv._id}
+                  className={styles.conversationMessage(conv.authorPerson)}
+                >
+                  <div className={styles.avatar}>
+                    <img
+                      src={`https://avatars.gg.pl/user,${conv.authorPerson}/s,80x80`}
+                      onError={({ currentTarget }) => {
+                        currentTarget.onerror = null; // prevents looping
+                        currentTarget.src = userIcon;
+                      }}
+                    />
+                  </div>
+                  <div className={styles.messageBox}>
+                    <div className="font-bold text-xs">
+                      {format(conv.createdAt, "dd-MM-yyyy kk:mm:ss")}
+                    </div>
+                    <i className="text-xs">{conv.authorPerson}</i>
+                    {isPhoto ? (
+                      <img
+                        className="max-h-[250px] max-w-[250px]"
+                        src={
+                          displayOriginalMessages
+                            ? isGGPhoto
+                              ? conv.originalMessage.replace(
+                                  "www.gg.pl/dysk/",
+                                  "p.gg.pl/thumb/p/d/"
+                                )
+                              : conv.originalMessage
+                            : conv.message
+                        }
+                      />
+                    ) : (
+                      <div
+                        className="w-fit p-[4px]"
+                        title={
+                          displayOriginalMessages
+                            ? conv.message
+                            : conv.originalMessage
+                        }
+                      >
+                        {displayOriginalMessages
+                          ? conv.originalMessage
+                          : conv.message}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
       </div>
     </div>
   );
