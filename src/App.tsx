@@ -63,7 +63,7 @@ function App() {
           onClick={() => setDisplayOriginalMessages((prev) => !prev)}
         >{`Set to ${displayOriginalMessages ? "validated" : "original"} messages`}</button>
       </div>
-      <div className="flex w-full overflow-auto">
+      <div className="flex w-full h-full overflow-auto">
         {" "}
         <div className="bg-yellow-700 min-w-[700px] overflow-auto">
           {conversationLiastLoading ? (
@@ -72,7 +72,7 @@ function App() {
             conversationPair.map((pair) => (
               <div
                 key={pair._id}
-                onClick={() => fetchConversation(pair.personTwo)}
+                onClick={() => fetchConversation(pair.personOne)}
                 className={styles.conversationPairCard}
               >
                 <div className="flex">
