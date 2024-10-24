@@ -53,7 +53,8 @@ function App() {
       "flex flex-col items-start justify-between bg-yellow-500 rounded shadow-lg m-[12px] p-[12px] hover:bg-blue-200 hover:cursor-pointer gap-y-[4px]",
     conversationMessage: (authorPerson: string) =>
       clsx("flex items-center py-[8px] gap-x-[8px]", {
-        "place-content-end": authorPerson !== conversation.personOne,
+        "place-content-end flex-row-reverse":
+          authorPerson !== conversation.personOne,
       }),
   };
 
