@@ -45,8 +45,8 @@ export const UserCard = ({
         </div>
       </div>
       <div className={styles.personDetails}>
-        <div className="font-bold">{personName}</div>
-        <div>{person}</div>
+        <div className="font-bold">{personName || "?"}</div>
+        <div>{person || "∞"}</div>
       </div>
       <i className="text-xs truncate max-w-full">{personDescription}</i>
     </div>
