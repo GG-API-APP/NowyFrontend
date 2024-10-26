@@ -67,7 +67,7 @@ function App() {
       </div>
       <div className="flex w-full h-full overflow-auto">
         {" "}
-        <div className="bg-yellow-700 min-w-[700px] overflow-auto">
+        <div className="bg-yellow-700 min-w-[700px] max-w-[700px] overflow-auto">
           {conversationLiastLoading ? (
             <Spinner />
           ) : (
